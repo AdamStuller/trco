@@ -46,6 +46,8 @@ int main () {
     struct sockaddr_in their_addr;
     char buf[MAXBUFLEN];
 
+    printf("Server is running, waiting for connection\n");
+
     while(1) {
         addr_len = sizeof(struct sockaddr);
         if ((numbytes = recvfrom(udp_socket, buf, MAXBUFLEN-1 , 0,
