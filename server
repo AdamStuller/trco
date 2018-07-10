@@ -1,0 +1,22 @@
+#!/bin/bash
+# @autor SandroRybarik
+
+# Program emulates communication client-server with help
+# of unix programs.
+# Warning: Program is not suitable for production use!
+
+# port on which "server" listens 
+port=1234
+
+# infinite loop waiting for connection and all data append
+# to logfile
+# -l means listen
+# look at -k in man nc
+nc -k -l -p $port >> logfile
+
+# Server is listening at 127.0.0.1 (local ip address of machine)
+# port 1234 
+
+#----------------------------------------------------
+#  FOR MORE INFORMATION TYPE INTO TERMINAL : man nc |
+#----------------------------------------------------
