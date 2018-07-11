@@ -28,7 +28,7 @@ int main () {
     struct sockaddr_in my_addr;
 
     struct in_addr inaddr;
-    inaddr.s_addr = INADDR_ANY;
+    inaddr.s_addr = htonl(INADDR_LOOPBACK);
 
     my_addr.sin_family = AF_INET;
     my_addr.sin_port = htons(5000);
