@@ -4,6 +4,7 @@
 2. `./build/server`
 3. go to [client](##client)
 
+
 ## client.sh
 1. change permission to execute script `chmod +x client.sh`
 2. `./client.sh`
