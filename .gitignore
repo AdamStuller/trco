@@ -1,0 +1,3 @@
+/websrv/node_modules/*
+logfile
+/websrv/database/db.js

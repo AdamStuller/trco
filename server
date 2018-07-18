@@ -12,10 +12,12 @@ port=1234
 # to logfile
 # -l means listen
 # look at -k in man nc
-nc -k -l -p $port >> logfile
+nc -l $port >> ./websrv/logfile
 
 # Server is listening at 127.0.0.1 (local ip address of machine)
 # port 1234 
+
+
 
 #----------------------------------------------------
 #  FOR MORE INFORMATION TYPE INTO TERMINAL : man nc |
