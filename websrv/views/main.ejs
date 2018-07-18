@@ -1,0 +1,11 @@
+<% include partials/header %>    
+    
+    <body>
+        <h1>Hello world!</h1>
+        <ul>
+            <% datas.forEach(function(data){ %>
+                <li><%= data.id %> - <%= data.main_data %> - <%= data.reg_date %></li>
+            <% }); %>
+        </ul>
+    </body>
+</html>
