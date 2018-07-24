@@ -57,6 +57,19 @@ int main () {
 
         buf[numbytes] = '\0';
         printf("length: %d\ncontent: %s\n", numbytes, buf);
+
+		/*
+		 * Save received data into log file		
+		*/
+
+		FILE *logptr;
+		logptr = fopen("./build/log", "a+");
+		if (logptr != NULL)
+		{
+			fputs(buf, logptr);
+			fclose(logptr);
+		}
+
     }
 
     return 0;
