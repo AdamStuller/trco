@@ -1,24 +1,7 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
-#define CONF_BUFF_LEN 512
-#define CONF_MAX_NUM_LINES 10
-
-struct CONFIG {
-    unsigned short PORT;
-    char HOST_IP[16];
-    char LOG_FILE[128];
-    char DAT_FILE[128];
-};
-
+#include "config.h"
 
 void print_CONFIG(struct CONFIG s) {
     printf("HOST_IP=%s\nPORT=%d\nLOG_FILE=%s\nDAT_FILE=%s\n", s.HOST_IP, s.PORT, s.LOG_FILE, s.DAT_FILE);
-}
-
-int load_config(const char * config_file) {
-    return 0;
 }
 
 void print_err(int errnum) {
@@ -86,30 +69,32 @@ int load_from_lines(char ** lines, int len, struct CONFIG *ss) {
 }
 
 
+/**
+ * Loads config file and fills the struct CONFIG
+ * Returns zero on success 
+ */
+int load_config(const char * config_file, struct CONFIG *s) {
 
-int main() {
-
-    FILE* f = fopen("config.cfg", "r");
+    FILE* f = fopen(config_file, "r");
 
     if (f == NULL)
         exit(EXIT_FAILURE);
    
     fseek(f, 0, SEEK_END); // seek to end of file
+    
     int size = ftell(f); // get current file pointer
+    
     if (size > CONF_BUFF_LEN - 1) {
         printf("Config file is too big. Max 511 chars.");
         exit(EXIT_FAILURE);
         fclose(f);
     }
+    
     fseek(f, 0, SEEK_SET); // seek back to beginning of file
 
     // proceed with allocating memory and reading the file
     char * lines[CONF_MAX_NUM_LINES];
     bzero(lines, CONF_MAX_NUM_LINES);
-    
-    if (lines == NULL)
-        exit(EXIT_FAILURE);
-    
     
     // Setup buffer for whole config
     char line_buf[CONF_BUFF_LEN];
@@ -117,7 +102,7 @@ int main() {
     
     // First line starts at line_buf[0]
     lines[0] = line_buf;
-
+    // Load other lines to *lines[]
     int c, i = 0, j = 1;
     while ((c = fgetc(f)) != EOF) {
         if (c == '\n') {
@@ -130,16 +115,25 @@ int main() {
         }
 
     }
-    struct CONFIG s;
-    int r = load_from_lines(lines, j, &s);
+    
+    int r = load_from_lines(lines, j, s);
 
     if (r != 0) {
         print_err(r);
-        exit(EXIT_FAILURE);
+        return -1;
         fclose(f);
     }
-
-    print_CONFIG(s);
     
     fclose(f);
+    return 0;
 }
+
+// int main() {
+//     struct CONFIG s;
+//     int e = load_config("config.cfg", &s);
+//     if (e != 0) {
+//         exit(EXIT_FAILURE);
+//     }
+//     print_CONFIG(s);
+//     exit(EXIT_SUCCESS);
+// }

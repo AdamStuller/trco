@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
+#include "config.h"
 
 // util function from man 2 bind
 #define handle_error(msg) \
@@ -15,6 +16,15 @@
 #define MAXBUFLEN 1024
 
 int main () {
+    struct CONFIG config;
+    int e = load_config("config.cfg", &config);
+    if (e != 0) {
+        exit(EXIT_FAILURE);
+    }
+    
+    // exit(EXIT_SUCCESS);
+
+
     // create socket - man ip 7
     int udp_socket;
     if ((udp_socket = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
@@ -24,10 +34,10 @@ int main () {
     
     struct sockaddr_in addr_listen_on;
     addr_listen_on.sin_family = AF_INET; // AF_INET is an address family that is used to designate the type of addresses that your socket can communicate with (in this case, Internet Protocol v4 addresses)
-    addr_listen_on.sin_port = htons(5000);
+    addr_listen_on.sin_port = htons(config.PORT);
     
     struct in_addr inaddr;
-    inaddr.s_addr = htonl(INADDR_LOOPBACK); // the struct s_addr is a 4-byte number that represents one digit in an IP address per byte
+    inaddr.s_addr = inet_addr(config.HOST_IP);//htonl(INADDR_LOOPBACK); // the struct s_addr is a 4-byte number that represents one digit in an IP address per byte
     
     addr_listen_on.sin_addr = inaddr;
     
@@ -41,8 +51,8 @@ int main () {
     struct sockaddr_in addr_incoming_from_outside; // hold their address
     char buf[MAXBUFLEN]; // space for holding incoming data in memory
 
-    printf("Server is running, waiting for connections\n");
-
+    printf("Server is running, waiting for connections\nServer is running under configuration:\n");
+    print_CONFIG(config);
     while(1) {
         addr_len = sizeof(struct sockaddr);
 
@@ -63,7 +73,7 @@ int main () {
 		*/
 
 		FILE *logptr;
-		logptr = fopen("./build/log", "a+");
+		logptr = fopen(config.LOG_FILE, "a+");
 		if (logptr != NULL)
 		{
 			fputs(buf, logptr);

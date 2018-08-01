@@ -7,12 +7,20 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
+#include "config.h"
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         printf("Usage: ./clientc message\n");
         return -1;
     }
+
+    struct CONFIG config;
+    int e = load_config("client.cfg", &config);
+    if (e != 0) {
+        exit(EXIT_FAILURE);
+    }
+    
 
     // simple argv protection v0.0.1
     int mess_len;
@@ -24,11 +32,11 @@ int main(int argc, char *argv[]) {
     int udp_socket = socket(AF_INET, SOCK_DGRAM, 0);
 
     struct in_addr addr_send_to; // *
-    addr_send_to.s_addr = htonl(INADDR_LOOPBACK);
+    addr_send_to.s_addr = inet_addr(config.HOST_IP);
 
     struct sockaddr_in sockaddr_send_to;
     sockaddr_send_to.sin_family = AF_INET;    
-    sockaddr_send_to.sin_port = htons(5000);
+    sockaddr_send_to.sin_port = htons(config.PORT);
     sockaddr_send_to.sin_addr = addr_send_to; // *
     // ssize_t sendto(int sockfd, const void *buf, size_t len, int flags,
     //                const struct sockaddr *dest_addr, socklen_t addrlen);
