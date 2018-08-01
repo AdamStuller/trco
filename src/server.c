@@ -6,7 +6,8 @@ int main () {
     struct CONFIG config;
     int e, sockfd;
     struct sockaddr_in clientaddr;
-    char incomeMsg[MAXBUFLEN], processedData[MAXBUFLEN], outcomeMsg[MAXBUFLEN], output[MAXBUFLEN];
+    char incomeMsg[MAXBUFLEN], outcomeMsg[MAXBUFLEN];
+    char * output;
 
     //load and verify config file
     if ( (e = load_config("config/server.cfg", &config) ) != 0){
