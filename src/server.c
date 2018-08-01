@@ -7,7 +7,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
-#include "config.h"
+#include "libs/config.h"
 
 // util function from man 2 bind
 #define handle_error(msg) \
@@ -17,7 +17,7 @@
 
 int main () {
     struct CONFIG config;
-    int e = load_config("config.cfg", &config);
+    int e = load_config("config/server.cfg", &config);
     if (e != 0) {
         exit(EXIT_FAILURE);
     }

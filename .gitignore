@@ -1,1 +1,4 @@
-/build
+client
+server
+*.txt
+*.o
