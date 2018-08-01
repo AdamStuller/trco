@@ -6,11 +6,12 @@
 #define CONF_MAX_NUM_LINES 10
 
 struct CONFIG {
-    int PORT;
+    unsigned short PORT;
     char HOST_IP[16];
     char LOG_FILE[128];
     char DAT_FILE[128];
 };
+
 
 void print_CONFIG(struct CONFIG s) {
     printf("HOST_IP=%s\nPORT=%d\nLOG_FILE=%s\nDAT_FILE=%s\n", s.HOST_IP, s.PORT, s.LOG_FILE, s.DAT_FILE);
@@ -44,18 +45,18 @@ int load_from_lines(char ** lines, int len, struct CONFIG *ss) {
             char * s = strchr(lines[i], '=');
             s += 1; // shift to right, omit '='
             
-            int conv = atoi(s + 1);
-            if (conv == 0) {
+            int conv = atoi(s);
+            if (conv <= 0 || conv > 2<<16 - 1) {
                 return -1;
             }
-            ss->PORT = atoi(s);
+            ss->PORT = (unsigned short)conv;
         } else if (strstr(lines[i], "HOST_IP=") != NULL) {
             char * s = strchr(lines[i], '=');
             s += 1; // shift to right, omit '='
             
             int l = strlen(s);
 
-            if (l > 15) {
+            if (l > 2<<4 - 1) {
                 return -2;
             }
             *(s + l) = '\0';
@@ -65,7 +66,7 @@ int load_from_lines(char ** lines, int len, struct CONFIG *ss) {
             char * s = strchr(lines[i], '=');
             s += 1; // shift to right, omit '='
             int l = strlen(s);
-            if (l > 127) {
+            if (l > 2<<8 - 1) {
                 return -3;
             }
             strncpy(ss->LOG_FILE, s, l + 1);
@@ -75,7 +76,7 @@ int load_from_lines(char ** lines, int len, struct CONFIG *ss) {
             char * s = strchr(lines[i], '=');
             s += 1; // shift to right, omit '='
             int l = strlen(s);
-            if (l > 127) {
+            if (l > 2<<8 - 1) {
                 return -4;
             }
             strncpy(ss->DAT_FILE, s, l + 1);
@@ -101,10 +102,10 @@ int main() {
         fclose(f);
     }
     fseek(f, 0, SEEK_SET); // seek back to beginning of file
-    // proceed with allocating memory and reading the file
 
+    // proceed with allocating memory and reading the file
     char * lines[CONF_MAX_NUM_LINES];
-    bzero(lines, 10);
+    bzero(lines, CONF_MAX_NUM_LINES);
     
     if (lines == NULL)
         exit(EXIT_FAILURE);
@@ -132,8 +133,10 @@ int main() {
     struct CONFIG s;
     int r = load_from_lines(lines, j, &s);
 
-    if (r == -1) {
-
+    if (r != 0) {
+        print_err(r);
+        exit(EXIT_FAILURE);
+        fclose(f);
     }
 
     print_CONFIG(s);
