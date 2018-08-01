@@ -1,11 +1,24 @@
 # Usage
-## server.c
-1. `gcc server.c -o ./build/server`
-2. `./build/server`
+## build
+1. `make build`
+2. this generate `server`, `client`
+
+## Server
+1. **setup config file in `config/server.cfg`** see [config file](##Server.cfg)
+2. `./server`
 3. go to [client](##client)
 
 
-## client.sh
-1. change permission to execute script `chmod +x client.sh`
-2. `./client.sh`
-3. type something to terminal and hit \<enter\> or server terminal
+## Client
+1. **setup config file in `config/client.cfg`** see [config file](##Client.cfg)
+2. `./client "MESSAGE"`
+
+## Server.cfg
+* `HOST_IP`=0.0.0.0
+* `PORT`=5000
+* `LOG_FILE`=log.txt
+* `DAT_FILE`=data.txt - to be implemented
+
+## Client.cfg
+* `HOST_IP`=127.0.0.1
+* `PORT`=5000
