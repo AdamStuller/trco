@@ -21,11 +21,11 @@ int main () {
         
         rcv(sockfd, incomeMsg, &clientaddr);
        
-        processData(incomeMsg, output, outcomeMsg);
+        //processData(incomeMsg, output, outcomeMsg);
 
-        printf("%s", output);
+        printf("%s", incomeMsg);
 
-        snd(sockfd, outcomeMsg, clientaddr);
+        //snd(sockfd, outcomeMsg, clientaddr);
 
     }
 
