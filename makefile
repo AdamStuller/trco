@@ -5,3 +5,7 @@ pato: pato_server.c pato_client.c
 cleanup:
 	rm server
 	rm client
+
+cleantest: 
+	rm test
+	rm test.c
