@@ -3,36 +3,28 @@
 
 int main () {
 
-    //load and verify config file
     struct CONFIG config;
     int e, sockfd;
-    char income[MAXBUFLEN];
+    struct sockaddr_in clientaddr;
+    char incomeMsg[MAXBUFLEN], processedData[MAXBUFLEN], outcomeMsg[MAXBUFLEN], output[MAXBUFLEN];
 
+    //load and verify config file
     if ( (e = load_config("config/server.cfg", &config) ) != 0){
         exit(EXIT_FAILURE);
     }
     print_CONFIG(config);
     
-    if ( (e = run_srv(config, &sockfd)) != 0){
-        exit(EXIT_FAILURE);
-    }
-    printf("Server is running, waiting for connections\n");
+    run_srv(config, &sockfd);
 
-    //main server loop
     for(;;){
+        
+        rcv(sockfd, incomeMsg, &clientaddr);
+       
+        processData(incomeMsg, output, outcomeMsg);
 
-        //waiting for data
-        if ( (e = rcv(sockfd, income)) != 0 ){
-            exit(EXIT_FAILURE);
-        }
+        printf("%s", output);
 
-        if ( (e = processData()) != 0 ){
-            exit(EXIT_FAILURE);
-        }
-
-        if ( (e = snd()) != 0 ){
-            exit(EXIT_FAILURE);
-        }
+        snd(sockfd, outcomeMsg, clientaddr);
 
     }
 

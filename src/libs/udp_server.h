@@ -15,6 +15,6 @@
 #define MAXBUFLEN 512
 
 int run_srv(struct CONFIG config, int * sockfd);
-int rcv(int sockfd, char * income);
+int rcv(int sockfd, char * income, struct sockaddr_in * clientaddr);
 int processData();
 int snd();
