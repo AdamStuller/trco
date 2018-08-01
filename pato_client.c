@@ -10,7 +10,7 @@
 
 int main(int argc, char const *argv[])
 {
-    char * message = "Helloo from client";
+    char * message = "daco";
     int sockfd;
     struct sockaddr_in servaddr;
 
@@ -23,14 +23,18 @@ int main(int argc, char const *argv[])
 
     connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
 
-    sendto(sockfd, message, MAXLINE, 0, NULL, sizeof(servaddr));
+    for(;;){
+        scanf("%s", message);
+        sendto(sockfd, message, MAXLINE, 0, NULL, sizeof(servaddr));
 
-    //wait for response
-    char buffer[MAXLINE];
-    ssize_t msgLen;
-    msgLen = recvfrom(sockfd, buffer, sizeof(buffer), 0, NULL, NULL);
-    buffer[msgLen] = '\0';
-    printf("%s", buffer);
+        //wait for response
+        char buffer[MAXLINE];
+        ssize_t msgLen;
+        msgLen = recvfrom(sockfd, buffer, sizeof(buffer), 0, NULL, NULL);
+        buffer[msgLen] = '\0';
+        printf("%s", buffer);
+    }
+    
 
     return 0;
 }
