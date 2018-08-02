@@ -42,15 +42,17 @@ int rcv(int sockfd, char * income, struct sockaddr_in * clientaddr){
     int n = sizeof(*clientaddr);
     msgLen = recvfrom(sockfd, income, MAXBUFLEN, 0, (struct sockaddr*)clientaddr, &n);
     income[msgLen] = '\0';
-    printf("%s\n", income);
 
     return 0;
 }
 
 /*
-    send function ... //TODO
+    sends raw message to client
 */
-int snd(){ 
-    //TODO: implement
+int snd(int sockfd, char * outcomeMsg, struct sockaddr_in * clientaddr){ 
+
+    //not working
+    sendto(sockfd, outcomeMsg, MAXBUFLEN, 0, (struct sockaddr*)clientaddr, sizeof(clientaddr));
+
     return 0;
 }

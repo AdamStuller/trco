@@ -1,7 +1,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-
 #define MESSAGE_BODY_LEN 412
 #define MESSAGE_HEADER_LEN 7
 

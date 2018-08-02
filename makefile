@@ -9,3 +9,6 @@ clean:
 
 dev_srv: 
 	gcc -o server src/server.c src/libs/config.c src/libs/udp_server.c -Werror
+
+build_client:	src/client.c src/libs/config.c
+	gcc -o client -Werror src/client.c src/libs/config.c

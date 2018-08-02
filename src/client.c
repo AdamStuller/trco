@@ -7,7 +7,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
-#include "libs/config.h"
+#include "libs/headers/config.h"
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
@@ -24,8 +24,8 @@ int main(int argc, char *argv[]) {
 
     // simple argv protection v0.0.1
     int mess_len;
-    if ((mess_len = strlen(argv[1])) > 1023) {
-        printf("Message is too long");
+    if ((mess_len = strlen(argv[1])) > 512) {
+        printf("Message is too long\n");
         return -1;
     }
 
@@ -56,6 +56,12 @@ int main(int argc, char *argv[]) {
         perror("send");
         exit(EXIT_FAILURE);     
     }
+
+    char msgFromSrv[512];
+    int addrlen = sizeof(sockaddr_send_to);
+    ssize_t msglen = recvfrom(udp_socket, msgFromSrv, 512, 0, (struct sockaddr *)&sockaddr_send_to, &addrlen);
+    msgFromSrv[msglen] = '\0';
+    printf("Server: %s\n", msgFromSrv);
 
     return 0;
 }
