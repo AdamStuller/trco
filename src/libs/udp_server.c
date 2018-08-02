@@ -21,7 +21,7 @@ int run_srv(struct CONFIG config, int * sockfd){
     servaddr.sin_port = htons(config.PORT);
     servaddr.sin_addr.s_addr = inet_addr(config.HOST_IP);
 
-    if (bind(*sockfd, (struct sockaddr *)&servaddr, (socklen_t) sizeof(servaddr))) {
+    if (bind(*sockfd, (struct sockaddr *)&servaddr, (socklen_t) sizeof(servaddr)) == -1) {
         handle_error("bind");
     }
 
@@ -35,12 +35,15 @@ int run_srv(struct CONFIG config, int * sockfd){
     sets client address into arg2
 */
 int rcv(int sockfd, char * income, struct sockaddr_in * clientaddr){
-
-    //TODO: error check
-
     ssize_t msgLen;
     int n = sizeof(*clientaddr);
-    msgLen = recvfrom(sockfd, income, MAXBUFLEN, 0, (struct sockaddr*)clientaddr, &n);
+    msgLen = recvfrom(sockfd, income, MAXBUFLEN - 1, 0, (struct sockaddr*)clientaddr, &n);    
+    if (msgLen == -1) {
+        perror("recvfrom");
+        income = NULL;
+        return -1;
+    }
+    
     income[msgLen] = '\0';
 
     return 0;
@@ -49,10 +52,11 @@ int rcv(int sockfd, char * income, struct sockaddr_in * clientaddr){
 /*
     sends raw message to client
 */
-int snd(int sockfd, char * outcomeMsg, struct sockaddr_in * clientaddr){ 
+int snd(int sockfd, char * outcomeMsg, struct sockaddr_in *clientaddr){ 
 
-    //not working
-    sendto(sockfd, outcomeMsg, MAXBUFLEN, 0, (struct sockaddr*)clientaddr, sizeof(clientaddr));
-
+    if (sendto(sockfd, outcomeMsg, MAXBUFLEN, 0, (struct sockaddr*)clientaddr, sizeof(*clientaddr)) == -1) {
+        perror("sendto");
+        return -1;
+    }
     return 0;
 }

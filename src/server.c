@@ -19,17 +19,24 @@ int main () {
     
     //creates socket file descriptor and realizes bind
     run_srv(config, &sockfd);
-
+    int sent = 0;
     for(;;){
 
         //recieve from client, set clientaddr
-        rcv(sockfd, incomeMsg, &clientaddr);
+        if (rcv(sockfd, incomeMsg, &clientaddr) != 0) {
+            // error case
+        }
 
         printf("%s\n", incomeMsg);
-
-        snd(sockfd, "OK", &clientaddr);
-
+    
+        if (snd(sockfd, "OKs\0", &clientaddr) != 0) {
+            // error case
+        }
     }
 
+
+    free(incomeMsg);
+    free(outcomeMsg);
+    
     return 0;
 }

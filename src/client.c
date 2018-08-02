@@ -52,6 +52,28 @@ int main(int argc, char *argv[]) {
     //     perror("sendto");
     //     exit(EXIT_FAILURE);
     // }
+    
+    // int sent = 0;
+
+    // char msgFromSrv[512];
+    // int addrlen = sizeof(sockaddr_send_to);
+    
+    // for(;;) {
+    //     ssize_t msglen =  recvfrom(udp_socket, msgFromSrv, 512, 0, (struct sockaddr *)&sockaddr_send_to, &addrlen);
+    //     if (sent == 0) {
+    //         // time to sent!
+    //         sent = 1;
+    //         if (sendto(udp_socket, buf, mess_len, MSG_CONFIRM, (struct sockaddr *) &sockaddr_send_to, sizeof(sockaddr_send_to)) == -1) {
+    //             perror("send");
+    //             exit(EXIT_FAILURE);     
+    //         }
+    //     }
+        
+    //     printf("%ld\n",msglen);
+    //     msgFromSrv[msglen] = '\0';
+    //     printf("Server: %s\n", msgFromSrv);
+    // }
+
     if (sendto(udp_socket, buf, mess_len, MSG_CONFIRM, (struct sockaddr *) &sockaddr_send_to, sizeof(sockaddr_send_to)) == -1) {
         perror("send");
         exit(EXIT_FAILURE);     
@@ -59,9 +81,27 @@ int main(int argc, char *argv[]) {
 
     char msgFromSrv[512];
     int addrlen = sizeof(sockaddr_send_to);
-    ssize_t msglen = recvfrom(udp_socket, msgFromSrv, 512, 0, (struct sockaddr *)&sockaddr_send_to, &addrlen);
+    ssize_t msglen = recvfrom(udp_socket, msgFromSrv, 512, 0, (struct sockaddr *)&sockaddr_send_to, &addrlen); // == -1) {
+
+    if (msglen == -1) {
+        perror("recvfrom");
+        free(buf);
+    }
+    
     msgFromSrv[msglen] = '\0';
     printf("Server: %s\n", msgFromSrv);
-
+    
+    free(buf);
     return 0;
 }
+
+/*
+    char msgFromSrv[512];
+    int addrlen = sizeof(sockaddr_send_to);
+    if(recvfrom(udp_socket, msgFromSrv, 512, 0, (struct sockaddr *)&sockaddr_send_to, &addrlen) == -1) {
+        perror("recvfrom");
+    }
+    msgFromSrv[511] = '\0';
+    printf("Server: %s\n", msgFromSrv);
+
+*/
