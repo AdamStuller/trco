@@ -1,4 +1,4 @@
-#include "config.h"
+#include "headers/config.h"
 
 void print_CONFIG(struct CONFIG s) {
     printf("HOST_IP=%s\nPORT=%d\nLOG_FILE=%s\nDAT_FILE=%s\n", s.HOST_IP, s.PORT, s.LOG_FILE, s.DAT_FILE);
