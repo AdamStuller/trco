@@ -1,5 +1,4 @@
 #include "libs/udp_server.h"
-// #include "libs/config.h"
 
 int main () {
 
@@ -19,20 +18,9 @@ int main () {
     run_srv(config, &sockfd);
 
     for(;;){
-        
-        /*
-            clientaddr sa vzdy nastavi na adresu clienta v rcv()
-        */
-
 
         //recieve from client, set clientaddr
         rcv(sockfd, incomeMsg, &clientaddr);
-       
-        /*
-            incomeMsg je je raw sprava od clienta,
-            teraz je uz len na uvazeni, ci chceme v main mat nejaky data processing alebo to pojde rovno
-            do processData(), ktora do output vypise chceny text z packetu a outcomeMsg ktory sa posle na client ako succes/fail/todo/request...
-        */
 
         //processData(incomeMsg, output, outcomeMsg);           //not implemented
 
@@ -41,14 +29,6 @@ int main () {
         //snd(sockfd, outcomeMsg, clientaddr);                  //not implemented
 
     }
-
-		// FILE *logptr;
-		// logptr = fopen(config.LOG_FILE, "a+");
-		// if (logptr != NULL)
-		// {
-		// 	fputs(buf, logptr);
-		// 	fclose(logptr);
-		// }
 
     return 0;
 }

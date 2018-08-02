@@ -1,5 +1,15 @@
+/*
+    udp_server.c provides all functions required to run communication server trough UDP.
+    This source file provides only simple functions for creating file descriptor and bind int to a socket,
+    recieve and send raw messages to client.
+*/
 #include "udp_server.h"
 
+
+/*
+    creates file descriptor and passes it through arg1 - int * sockfd.
+    Properly loaded config file needed to succesfull run.
+*/
 int run_srv(struct CONFIG config, int * sockfd){
 
     //TODO: error check
@@ -20,6 +30,10 @@ int run_srv(struct CONFIG config, int * sockfd){
     return 0;
 }
 
+/*
+    recieve function writes raw income message into arg1,
+    sets client address into arg2
+*/
 int rcv(int sockfd, char * income, struct sockaddr_in * clientaddr){
 
     //TODO: error check
@@ -29,17 +43,14 @@ int rcv(int sockfd, char * income, struct sockaddr_in * clientaddr){
     msgLen = recvfrom(sockfd, income, MAXBUFLEN, 0, (struct sockaddr*)clientaddr, &n);
     income[msgLen] = '\0';
     printf("%s\n", income);
-    
+
     return 0;
 }
 
-
-int processData(){
-    //TODO: implement
-    return 0;
-}
-
-int snd(){   //"send()"
+/*
+    send function ... //TODO
+*/
+int snd(){ 
     //TODO: implement
     return 0;
 }
