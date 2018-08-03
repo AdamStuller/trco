@@ -16,4 +16,4 @@
 
 int run_srv(struct CONFIG config, int * sockfd);
 int rcv(int sockfd, char * income, struct sockaddr_in * clientaddr);
-int snd();
+int snd(int sockfd, char * outcomeMsg, struct sockaddr_in *clientaddr);
