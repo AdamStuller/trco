@@ -19,7 +19,7 @@ int main () {
     
     //creates socket file descriptor and realizes bind
     run_srv(config, &sockfd);
-    int sent = 0;
+    
     for(;;){
 
         //recieve from client, set clientaddr
