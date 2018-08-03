@@ -37,42 +37,10 @@ int main(int argc, char *argv[]) {
     struct sockaddr_in sockaddr_send_to;
     sockaddr_send_to.sin_family = AF_INET;    
     sockaddr_send_to.sin_port = htons(config.PORT);
-    sockaddr_send_to.sin_addr = addr_send_to; // *
-    // ssize_t sendto(int sockfd, const void *buf, size_t len, int flags,
-    //                const struct sockaddr *dest_addr, socklen_t addrlen);
-
-
-
-
+    sockaddr_send_to.sin_addr = addr_send_to;
 
     char *buf = (char *)malloc(mess_len * sizeof(char));
     strncpy(buf, argv[1], mess_len);
-
-    // if (sendto(udp_socket, buf, 1023, flags,(struct sockaddr *) &sockaddr_send_to, sizeof(sockaddr_send_to)) == -1) {
-    //     perror("sendto");
-    //     exit(EXIT_FAILURE);
-    // }
-    
-    // int sent = 0;
-
-    // char msgFromSrv[512];
-    // int addrlen = sizeof(sockaddr_send_to);
-    
-    // for(;;) {
-    //     ssize_t msglen =  recvfrom(udp_socket, msgFromSrv, 512, 0, (struct sockaddr *)&sockaddr_send_to, &addrlen);
-    //     if (sent == 0) {
-    //         // time to sent!
-    //         sent = 1;
-    //         if (sendto(udp_socket, buf, mess_len, MSG_CONFIRM, (struct sockaddr *) &sockaddr_send_to, sizeof(sockaddr_send_to)) == -1) {
-    //             perror("send");
-    //             exit(EXIT_FAILURE);     
-    //         }
-    //     }
-        
-    //     printf("%ld\n",msglen);
-    //     msgFromSrv[msglen] = '\0';
-    //     printf("Server: %s\n", msgFromSrv);
-    // }
 
     if (sendto(udp_socket, buf, mess_len, MSG_CONFIRM, (struct sockaddr *) &sockaddr_send_to, sizeof(sockaddr_send_to)) == -1) {
         perror("send");
@@ -94,14 +62,3 @@ int main(int argc, char *argv[]) {
     free(buf);
     return 0;
 }
-
-/*
-    char msgFromSrv[512];
-    int addrlen = sizeof(sockaddr_send_to);
-    if(recvfrom(udp_socket, msgFromSrv, 512, 0, (struct sockaddr *)&sockaddr_send_to, &addrlen) == -1) {
-        perror("recvfrom");
-    }
-    msgFromSrv[511] = '\0';
-    printf("Server: %s\n", msgFromSrv);
-
-*/
