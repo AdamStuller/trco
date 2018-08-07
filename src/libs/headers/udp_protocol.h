@@ -18,6 +18,9 @@ int run_srv(struct CONFIG config, int * sockfd);
 
 #define MESSAGE_BODY_LEN 412
 #define MESSAGE_HEADER_LEN 7
+#define MAXBUFLEN 512
+#define CLIENT_SIDE 1
+#define SERVER_SIDE 0
 
 struct Message_Header {
     uint16_t size;
@@ -31,7 +34,7 @@ struct Message {
     char body[MESSAGE_BODY_LEN];
 };
 
-#define MAXBUFLEN 512
+
 
 int msg_to_bytes(struct Message m, unsigned char** buf);
 int bytes_to_msg(struct Message *m, unsigned char *buf, int body_len);

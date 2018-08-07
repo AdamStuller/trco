@@ -18,7 +18,7 @@ int main (int argc, char *argv[]) {
     print_CONFIG(config);
     
     //creates socket file descriptor and realizes bind
-    run(config, &sockfd, 0);
+    run(config, &sockfd, SERVER_SIDE);
     
     for(;;){
 

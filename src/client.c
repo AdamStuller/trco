@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     struct sockaddr_in servaddr;
     int sockfd;
 
-    run(config, &sockfd, 1);
+    run(config, &sockfd, CLIENT_SIDE);
 
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(config.PORT);
@@ -32,6 +32,7 @@ int main(int argc, char *argv[]) {
 
     char buff[512];
     rcv(sockfd, buff, &servaddr);
+    
     printf("Response: %s\n", buff);
     
 
