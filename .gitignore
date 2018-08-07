@@ -2,3 +2,5 @@ client
 server
 *.txt
 *.o
+test
+test.*

@@ -1,6 +1,6 @@
-#include "libs/headers/udp_server.h"
+#include "libs/headers/udp_protocol.h"
 
-int main () {
+int main (int argc, char *argv[]) {
 
     struct CONFIG config;
     int e, sockfd;                                              //e - error checker(not implemented), sockfd - socket file descriptor
@@ -18,7 +18,7 @@ int main () {
     print_CONFIG(config);
     
     //creates socket file descriptor and realizes bind
-    run_srv(config, &sockfd);
+    run(config, &sockfd, 0);
     
     for(;;){
 

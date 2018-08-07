@@ -1,17 +1,15 @@
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <errno.h>
-#include "libs/headers/config.h"
+#include "libs/headers/udp_protocol.h"
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         printf("Usage: ./clientc message\n");
+        return -1;
+    }
+
+    // simple argv protection v0.0.1
+    int mess_len;
+    if ((mess_len = strlen(argv[1])) > 512) {
+        printf("Message is too long\n");
         return -1;
     }
 
@@ -21,44 +19,21 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
     
+    struct sockaddr_in servaddr;
+    int sockfd;
 
-    // simple argv protection v0.0.1
-    int mess_len;
-    if ((mess_len = strlen(argv[1])) > 512) {
-        printf("Message is too long\n");
-        return -1;
-    }
+    run(config, &sockfd, 1);
 
-    int udp_socket = socket(AF_INET, SOCK_DGRAM, 0);
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_port = htons(config.PORT);
+    servaddr.sin_addr.s_addr = INADDR_ANY;
 
-    struct in_addr addr_send_to; // *
-    addr_send_to.s_addr = inet_addr(config.HOST_IP);
+    snd(sockfd, argv[1], &servaddr);
 
-    struct sockaddr_in sockaddr_send_to;
-    sockaddr_send_to.sin_family = AF_INET;    
-    sockaddr_send_to.sin_port = htons(config.PORT);
-    sockaddr_send_to.sin_addr = addr_send_to;
-
-    char *buf = (char *)malloc(mess_len * sizeof(char));
-    strncpy(buf, argv[1], mess_len);
-
-    if (sendto(udp_socket, buf, mess_len, MSG_CONFIRM, (struct sockaddr *) &sockaddr_send_to, sizeof(sockaddr_send_to)) == -1) {
-        perror("send");
-        exit(EXIT_FAILURE);     
-    }
-
-    char msgFromSrv[512];
-    int addrlen = sizeof(sockaddr_send_to);
-    ssize_t msglen = recvfrom(udp_socket, msgFromSrv, 512, 0, (struct sockaddr *)&sockaddr_send_to, &addrlen); // == -1) {
-
-    if (msglen == -1) {
-        perror("recvfrom");
-        free(buf);
-    }
+    char buff[512];
+    rcv(sockfd, buff, &servaddr);
+    printf("Response: %s\n", buff);
     
-    msgFromSrv[msglen] = '\0';
-    printf("Server: %s\n", msgFromSrv);
-    
-    free(buf);
+
     return 0;
 }
