@@ -88,8 +88,8 @@ int run(struct CONFIG config, int * sockfd, int side){
         
         printf("Server is running, waiting for connections\n");
     }
-    else{
-        printf("Client running\n");
-    }
+    
+    printf("Client running\n");
+    
     return 0;
 }
