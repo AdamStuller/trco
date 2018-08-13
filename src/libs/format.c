@@ -113,69 +113,9 @@ char * format (char * input, int len, int num_lines) {
 }
 
 
-char ** parse_keys(char *input, int * keys_num) {
-    int num_commas = 0;
-    char * head = input;
-    while(*head != '\0') {
-        if (*head == ',')
-            num_commas++;
-        head++;
-    }
- 
-    *keys_num = num_commas;
-
-    char ** keys = (char**) malloc(sizeof(char*) * num_commas);
-    char internal_buffer[256];
-    
-    bzero(internal_buffer, 256);
-    
-    for (int i = 0, j = 0; i < num_commas; i++) {
-        while (*input != '\0') {
-            if (*input == ',') {
-                strncpy(keys[i], internal_buffer, j - 1);
-                j = 0;
-            } else {
-                internal_buffer[j++] = *input;
-            }
-            input += 1;
-        }
-        
-        // internal_buffer[j] = 
-        // j++;
-    }
-    return keys;
-}
-
-/**
- * Returns correct input line(CRLF) according keys:value pairs
- * order according to keys order
- */
-char * encode_keypairs(char * keys, char * input, int len, int num_lines) {
-    // encode_keypairs("wifi,host,something", "wifi:something\r\nhost:yolo\r\nsomething:sss\r\n"); -> correct order of something\r\n ...
-    char * safe_buffer = remove_illegal_chars(input, strlen(input));
-    char ** lines = parse_input_CRLF(safe_buffer, len, num_lines);
-
-    // if ()
-
-
-    // char *strstr(const char *haystack, const char *needle);
-    int found = 0;
-    for (int i = 0; i < num_lines; i++) {
-        
-        // if (strstr() == NULL) {
-
-        // } else {
-        //     found = 1;
-        // }
-    }
-    return NULL;
-}
-
 // int main() {
-//     char *input = "Jello\r\nWorld\r\nMotfuckrs\r\n\0";
-//     char *keys = "wifi,hocico";
-//     // printf("%s\n", format(input, strlen(input), 3));
-//     int num_of_keys = 0;
-//     char ** ks =  parse_keys(keys,&num_of_keys);
+//         char *input = "Jello\r\nWorld\r\nBetterwords\r\n\0";
+//     printf("%s\n", format(input, strlen(input), 3));
+    
 //     return 0;
 // }
