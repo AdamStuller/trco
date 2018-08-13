@@ -26,10 +26,10 @@ unsigned char * remove_illegal_chars(char * input, int len) {
 
 /**
  * Explode lines separated with CRLF(\r\n)
+ * int num_lines represents expected number of lines that are coming
  */
 char ** parse_input_CRLF(char * input, int len, int num_lines) {
     char ** lines = (char **) malloc(sizeof(char *) * num_lines);
-    int num_of_lines = 0; // for validation of number of lines
 
     if (lines == NULL) {
         return NULL;
@@ -45,18 +45,35 @@ char ** parse_input_CRLF(char * input, int len, int num_lines) {
     char internal_buffer[MAX_ROW_LEN];
     memset(internal_buffer, '\0', MAX_ROW_LEN);
 
+    int current_num_lines = 0;
     for (int i = 0, j = 0; i < len; j++, i++) {
-        // CRLF, we are at end of line
-        if (input[i - 1] == '\r' && input[i] == '\n' && num_of_lines < NUMBER_OF_INPUT_LINES) { 
-            lines[num_of_lines] = (char *) malloc(sizeof(char) * j - 1);
-            // j - 1 omits CRLF from internal_buffer
-            strncpy(lines[num_of_lines], internal_buffer, j-1);
-            j = -1;
-            num_of_lines++;
+        // CRLF, we are at end of line, omits other lines which are out of num_of_lines boundary
+        if (input[i - 1] == '\r' && input[i] == '\n') { 
+            
+            // OK case
+            if (current_num_lines < num_lines) {
+                lines[current_num_lines] = (char *) malloc(sizeof(char) * j - 1);
+                // j - 1 omits CRLF from internal_buffer
+                strncpy(lines[current_num_lines], internal_buffer, j-1);
+                j = -1;
+            }
+
+            // MALFOMED, incoming lines are more than expected
+            if (current_num_lines >= num_lines) {
+                return NULL;
+            }
+
+            current_num_lines++;
         } else {
             internal_buffer[j] = input[i];
         }
     }
+
+    // there was not enough lines as expected
+    if (current_num_lines != num_lines) {
+        return NULL;
+    }
+
     return lines;
 }
 
@@ -65,11 +82,11 @@ char ** parse_input_CRLF(char * input, int len, int num_lines) {
  * without trailing ','
  */
 char * append_lines(char ** lines, int num) {
-    char * output = (char*) malloc(sizeof(char) * NUMBER_OF_INPUT_LINES * MAX_ROW_LEN + 3);
+    char * output = (char*) malloc(sizeof(char) * num * MAX_ROW_LEN + 3);
     if (output == NULL)
         return NULL;
 
-    bzero(output, NUMBER_OF_INPUT_LINES * MAX_ROW_LEN + 3);
+    bzero(output, num * MAX_ROW_LEN + 3);
 
     int j = 0;
     for (int i = 0; i < num; i++) {
@@ -111,11 +128,3 @@ char * format (char * input, int len, int num_lines) {
 
     return output;
 }
-
-
-// int main() {
-//         char *input = "Jello\r\nWorld\r\nBetterwords\r\n\0";
-//     printf("%s\n", format(input, strlen(input), 3));
-    
-//     return 0;
-// }
