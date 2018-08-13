@@ -1,4 +1,5 @@
 #include "libs/headers/udp_protocol.h"
+#include "libs/headers/format.h"
 
 int main (int argc, char *argv[]) {
 
@@ -35,13 +36,20 @@ int main (int argc, char *argv[]) {
             // error case
             perror("rcv Failed\n");
         } else {
-            fprintf(log_data, "%s\n", incomeMsg);
-            fflush(log_data);
+            char * formated_str = format(incomeMsg, strlen(incomeMsg), 5);
+            if (formated_str == NULL) {
+                // error occured, malformed message, cannot be saved
+                snd(sockfd, "Malformed message", &clientaddr);    
+            } else {
+                fprintf(log_data, "%s\n", formated_str);
+                free(formated_str);
+                fflush(log_data);
+            }
         }
 
         printf("%s\n", incomeMsg);
     
-        if (snd(sockfd, "OKs\0", &clientaddr) != 0) {
+        if (snd(sockfd, "OKs", &clientaddr) != 0) {
             // error case
         } else {
             ;

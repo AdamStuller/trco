@@ -8,7 +8,7 @@ clean:
 	rm log.txt
 
 dev_srv: 
-	gcc -o server src/server.c src/libs/config.c src/libs/udp_protocol.c -Werror
+	gcc -o server src/server.c src/libs/config.c src/libs/udp_protocol.c src/libs/format.c -Werror
 
 dev_client:	src/client.c src/libs/config.c src/libs/udp_protocol.c
 	gcc -o client -Werror src/client.c src/libs/config.c src/libs/udp_protocol.c
